@@ -1,6 +1,6 @@
-// Winter'24
+// Winter'26
 // Instructor: Diba Mirza
-// Student name: 
+// Student name: Lucas Zhou
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -35,11 +35,13 @@ int main(int argc, char** argv){
     }
   
     // Create an object of a STL data-structure to store all the movies
-
+    set<Movie, CompareMoviesAlpha> movies_alpha; //initalized set, store by rating
     string line, movieName;
     double movieRating;
     // Read each file and store the name and rating
     while (getline (movieFile, line) && parseLine(line, movieName, movieRating)){
+        Movie m{movieName, movieRating}; //create object
+	movies_alpha.insert(m); //insert       
             // Use std::string movieName and double movieRating
             // to construct your Movie objects
             // cout << movieName << " has rating " << movieRating << endl;
@@ -50,6 +52,9 @@ int main(int argc, char** argv){
 
     if (argc == 2){
             //print all the movies in ascending alphabetical order of movie names
+            for (const auto& movie : movies_alpha) { //iterate
+	        cout << movie.title << " has rating " << movie.rating << endl; //print line by line!
+	    } 
             return 0;
     }
 
@@ -59,22 +64,59 @@ int main(int argc, char** argv){
         cerr << "Could not open file " << argv[2];
         exit(1);
     }
-
+    
+    //part 2 code:
     vector<string> prefixes;
     while (getline (prefixFile, line)) {
+      
         if (!line.empty()) {
             prefixes.push_back(line);
         }
     }
+    //2a
+    for (auto s : prefixes) { //range for loop
+      bool foundMatch = false; //didn't find a match yet
+      set<Movie, CompareMovieRating> movies_rating_prefix; //make a subset of rating for one prefix
+      for (auto m : movies_alpha) { //ready to check
+        if (m.title.starts_with(s)) { //title begins with prefix?
+          //cout << m.title << ", " << m.rating << endl; //print
+          movies_rating_prefix.insert(m); //insert movies based on prefix
+          foundMatch = true; //flag true 
+        } 
+      }
+      if (foundMatch == false) { //still no after searching for prefix
+        cout << "No movies found with prefix " << s << endl; //print this
+      } else {
+        for (auto x : movies_rating_prefix) { //iterate through each subset
+          cout << x.title << ", " << x.rating << endl; //print contents
+        }
+      }
+      cout << endl; //extra space
+    } 
+    //2b
+    for (auto s : prefixes) {
+      bool foundMatch = false; //didn't find match
+      priority_queue<Movie, vector<Movie>, CompareMovieRatingPQ> movies_rating_prefix; //subset, max heap in movies vector
+      for (auto m : movies_alpha) { //ready to check
+        if (m.title.starts_with(s)) { //title begins with prefix?
+          //cout << m.title << ", " << m.rating << endl; //print
+          movies_rating_prefix.push(m); //push movies based on prefix
+          foundMatch = true; //flag true
+        }
+      }
+      if (foundMatch == true) { //still no after searching for prefix
+        cout << "Best movie with prefix " << s << " is: " << movies_rating_prefix.top().title << " with rating " << fixed << setprecision(1) << movies_rating_prefix.top().rating << endl;
+      }
+    }
+    
 
     //  For each prefix,
     //  Find all movies that have that prefix and store them in an appropriate data structure
     //  If no movie with that prefix exists print the following message
-    cout << "No movies found with prefix "<<"<replace with prefix>" << endl;
+    //cout << "No movies found with prefix "<<"<replace with prefix>" << endl;
 
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
-    cout << "Best movie with prefix " << "<replace with prefix>" << " is: " << "replace with movie name" << " with rating " << std::fixed << std::setprecision(1) << "replace with movie rating" << endl;
 
     return 0;
 }
