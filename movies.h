@@ -23,8 +23,14 @@ struct CompareMovieRating { //compare rating
  
 struct CompareMovieRatingPQ { //for the priority queue
   bool operator()(const Movie& a, const Movie& b) const { //overload ()
-    return a.rating < b.rating; //b has higher priority return true
-  }
+    if (a.rating < b.rating) { //a lower priority
+      return true; //true
+    } else if (a.rating > b.rating) { //b lower priority
+      return false; //false
+    } else { //same rating
+      return a.title > b.title; //following priority queue logic. compare alphabetical 
+    }
+  }  
 };
 //pq logic:
 //if b.rating > a.rating == true (a is less than b), a has lower priority, smaller movies move to the bottom, max heap (opposite of set)
