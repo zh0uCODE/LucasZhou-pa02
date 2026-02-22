@@ -90,9 +90,10 @@ int main(int argc, char** argv){
         for (auto x : movies_rating_prefix) { //iterate through each subset
           cout << x.title << ", " << x.rating << endl; //print contents
         }
+        cout << endl; // extra space between found movies only
       }
-      cout << endl; //extra space
     } 
+    
     //2b
     for (auto s : prefixes) {
       bool foundMatch = false; //didn't find match
