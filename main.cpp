@@ -80,12 +80,28 @@ int main(int argc, char** argv){
     for (auto s : prefixes) { //range for loop
       bool foundMatch = false; //didn't find a match yet
       priority_queue<Movie, vector<Movie>, CompareMovieRatingPQ> movies_rating_prefix; //make a sub queue of rating for one prefix
+      /*
       for (auto m : movies_alpha) {
         if (m.title.starts_with(s)) { //title begins with prefix?
           //cout << m.title << ", " << m.rating << endl; //print
           movies_rating_prefix.push(m); //insert movies based on prefix
           foundMatch = true; //flag true 
         } 
+      }
+      */
+      auto it = lower_bound(
+        movies_alpha.begin(), movies_alpha.end(), s,
+        [] (const Movie& m, const string& prefix) { //pass parameters for lower bound?
+          return m.title < prefix; //alphabetical
+        }
+      );
+      for (auto jt = it; jt != movies_alpha.end(); ++jt) { //iterator
+        if (jt->title.starts_with(s)) { //starts with s
+          movies_rating_prefix.push(*jt); //push
+          foundMatch = true; //true match
+        } else { //no?
+          break;
+        }
       }
       //2b prep
       if (foundMatch == false) { //still no after searching for prefix
