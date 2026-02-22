@@ -35,13 +35,13 @@ int main(int argc, char** argv){
     }
   
     // Create an object of a STL data-structure to store all the movies
-    priority_queue<Movie, vector<Movie>, CompareMoviesAlphaPQ> movies_alpha; //initalized pq, store by rating
+    vector<Movie> movies_alpha; //initalized pq, store by rating
     string line, movieName;
     double movieRating;
     // Read each file and store the name and rating
     while (getline (movieFile, line) && parseLine(line, movieName, movieRating)){
         Movie m{movieName, movieRating}; //create object
-	movies_alpha.push(m); //push       
+	movies_alpha.push_back(m); //push       
             // Use std::string movieName and double movieRating
             // to construct your Movie objects
             // cout << movieName << " has rating " << movieRating << endl;
@@ -49,13 +49,13 @@ int main(int argc, char** argv){
     }
 
     movieFile.close();
+    sort(movies_alpha.begin(), movies_alpha.end(), CompareMoviesAlpha()); //sort
     
     priority_queue<Movie, vector<Movie>, CompareMoviesAlphaPQ> temp; //copy to store movies alpha
     if (argc == 2){
             //print all the movies in ascending alphabetical order of movie names
-            while (!movies_alpha.empty()) {
-	        cout << movies_alpha.top().title << ", " << movies_alpha.top().rating << endl; //print line by line!
-                movies_alpha.pop(); //pop
+            for (auto m : movies_alpha) {
+	        cout << m.title << ", " << m.rating << endl; //print line by line!
 	    } 
             return 0;
     }
@@ -79,15 +79,13 @@ int main(int argc, char** argv){
     queue<pair<Movie, string>> best_movies; //queue for storing highest rated prefix
     for (auto s : prefixes) { //range for loop
       bool foundMatch = false; //didn't find a match yet
-      temp = movies_alpha; //assign everything in movies_alpha to temp
       priority_queue<Movie, vector<Movie>, CompareMovieRatingPQ> movies_rating_prefix; //make a sub queue of rating for one prefix
-      while (!temp.empty()) { //temp not empty
-        if (temp.top().title.starts_with(s)) { //title begins with prefix?
+      for (auto m : movies_alpha) {
+        if (m.title.starts_with(s)) { //title begins with prefix?
           //cout << m.title << ", " << m.rating << endl; //print
-          movies_rating_prefix.push(temp.top()); //insert movies based on prefix
+          movies_rating_prefix.push(m); //insert movies based on prefix
           foundMatch = true; //flag true 
         } 
-        temp.pop(); //pop when done
       }
       //2b prep
       if (foundMatch == false) { //still no after searching for prefix
