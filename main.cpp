@@ -53,7 +53,7 @@ int main(int argc, char** argv){
     if (argc == 2){
             //print all the movies in ascending alphabetical order of movie names
             for (const auto& movie : movies_alpha) { //iterate
-	        cout << movie.title << " has rating " << movie.rating << endl; //print line by line!
+	        cout << movie.title << ", " << movie.rating << endl; //print line by line!
 	    } 
             return 0;
     }
