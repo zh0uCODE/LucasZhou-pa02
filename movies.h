@@ -14,6 +14,11 @@ struct CompareMoviesAlpha { //functor to compare movies in alphabetical order
   }
 };
 //works!
+struct CompareMoviesAlphaPQ { //priority queue version
+  bool operator()(const Movie& a, const Movie& b) const {
+    return a.title > b.title; //opposite of regular
+  }
+};
 struct CompareMovieRating { //compare rating
   bool operator()(const Movie& a, const Movie& b) const { //overload function op.
     return a.rating > b.rating; //every a is bigger than b
