@@ -77,11 +77,11 @@ int main(int argc, char** argv){
     queue<pair<Movie, string>> best_movies; //queue for storing highest rated prefix
     for (auto s : prefixes) { //range for loop
       bool foundMatch = false; //didn't find a match yet
-      set<Movie, CompareMovieRating> movies_rating_prefix; //make a subset of rating for one prefix
+      priority_queue<Movie, vector<Movie>, CompareMovieRatingPQ> movies_rating_prefix; //make a sub queue of rating for one prefix
       for (auto m : movies_alpha) { //ready to check
         if (m.title.starts_with(s)) { //title begins with prefix?
           //cout << m.title << ", " << m.rating << endl; //print
-          movies_rating_prefix.insert(m); //insert movies based on prefix
+          movies_rating_prefix.push(m); //insert movies based on prefix
           foundMatch = true; //flag true 
         } 
       }
@@ -89,9 +89,10 @@ int main(int argc, char** argv){
       if (foundMatch == false) { //still no after searching for prefix
         cout << "No movies found with prefix " << s << endl; //print this
       } else {
-	best_movies.push({*movies_rating_prefix.begin(), s}); //push the beginning of every subset (same prefix, begin is the highest <- pointer)
-        for (auto x : movies_rating_prefix) { //iterate through each subset
-          cout << x.title << ", " << x.rating << endl; //print contents
+	best_movies.push({movies_rating_prefix.top(), s}); //push the beginning of every subset (same prefix, begin is the highest)
+        while (!movies_rating_prefix.empty()) { //iterate through each subset
+          cout << movies_rating_prefix.top().title << ", " << movies_rating_prefix.top().rating << endl; //print contents
+          movies_rating_prefix.pop(); //pop!
         }
         cout << endl; // extra space between found movies only
       }
