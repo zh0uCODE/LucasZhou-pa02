@@ -140,6 +140,35 @@ int main(int argc, char** argv){
 }
 
 /* Add your run time analysis for part 3 of the assignment here as commented block*/
+/*
+3a: The worst case time complexity of the code for part 2a would be O(m(log k + log n)). In part 2a, there are m prefixes, and only the movies that start with a certain prefix are pushed 
+    into a priority queue of ratings for that prefix. There are k movies that satisfy this condition. Also, the lower_bound binary search algorithm takes O(log n) time for each prefix for a total of
+    m prefixes. In part 2b, there is one best movie for each prefix for a total of m prefixes, and each pop operation from the queue takes O(1) time. The overall time for part 2b would be O(m). Adding
+    parts 2a and 2b together, the overall worst case time complexity is O(m(log k + log n + 1)).
+    
+    Running Times: 
+    input_20_random.csv: 10ms 
+    input_100_random.csv: 10ms
+    input_1000_random.csv: 20ms
+    input_76920_random.csv: 100ms
+*/
+
+/*
+3b: The worst case space complexity for 2a would be O(k) because there are at most k movies that begin with each prefix that are pushed into the priority queue of ratings based on one prefix. 
+    For part 2b, every prefix has one best movie for a total of m prefixes, so the worst case space complexity for 2b is O(m). For the overall program, the worst case space complexity would
+    then be O(m + k).
+*/
+
+/*
+3c: Initially, I ran a full search of all movies to find those with a certain prefix. It works, but runs too slow for Gradescope to pass all tests. I then used binary search, which made my code
+    run faster. Using binary search for each movie takes O(log n) time compared to a full search of n movies, which would take O(n) time. Space complexity remains the same because you are still searching 
+    for k movies that begin with a certain prefix. This makes the priority queue take up the same amount of memory, which is just k movies. So, making the program have a lower time complexity 
+    did not change its space complexity.   
+*/
+
+
+
+
 
 bool parseLine(string &line, string &movieName, double &movieRating) {
     int commaIndex = line.find_last_of(",");
